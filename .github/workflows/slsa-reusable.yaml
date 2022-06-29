@@ -15,12 +15,13 @@ jobs:
       id-token: write # For signing
       contents: write # For asset uploads. Always needed, even when not setting `upload-assets: false` :/
     #uses: slsa-framework/slsa-github-generator-go/.github/workflows/slsa3_builder.yml@main
-    uses: asraa/slsa-github-generator/.github/workflows/builder_go_slsa3.yml@malicious
+    uses: asraa/slsa-github-generator/.github/workflows/builder_go_slsa3.yml@configure-rekor-url
     with:
       go-version: 1.17
       upload-assets: false
       config-file: ./.github/workflows/go-configs/config1.yml
       compile-builder: true
+      rekor-url: "https://rekor.sigstage.dev"
 
   upload:
     permissions:
