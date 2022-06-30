@@ -21,7 +21,7 @@ jobs:
       upload-assets: false
       config-file: ./.github/workflows/go-configs/config1.yml
       compile-builder: true
-      rekor-url: "https://rekor.sigstage.dev"
+      staging: true
 
   upload:
     permissions:
