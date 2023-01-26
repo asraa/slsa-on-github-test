@@ -19,41 +19,8 @@ builds:
     - linux
   goarch:
     - amd64
-    - arm64
-    - 386
-    - arm
   ldflags:
     -
-
-- id: darwin
-  binary: example-darwin-{{ .Arch }}
-  flags:
-      - -trimpath
-      - -tags=netgo
-  mod_timestamp: '{{ .CommitTimestamp }}'
-  goos:
-    - darwin
-  goarch:
-    - amd64
-    - arm64
-  ldflags:
-    - 
-
-- id: windows
-  binary: example-windows-{{ .Arch }}
-  flags:
-      - -trimpath
-      - -tags=netgo
-  mod_timestamp: '{{ .CommitTimestamp }}'
-  goos:
-    - windows
-  goarch:
-    - amd64
-    - 386
-    - arm64
-    - arm
-  ldflags:
-    - -buildmode=exe
 
 checksum:
   # Algorithm to be used.
