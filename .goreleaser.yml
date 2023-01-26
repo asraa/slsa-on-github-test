@@ -10,7 +10,7 @@ gomod:
   proxy: true
 builds:
 - id: linux
-  binary: xeample-linux-{{ .Arch }}
+  binary: example-linux-{{ .Arch }}
   flags:
       - -trimpath
       - -tags=netgo

@@ -21,7 +21,7 @@ jobs:
     permissions:
       id-token: write # For signing.
       contents: write # For asset uploads.
-      packages: write
+      packages: write # To release to GitHub
       actions: read # For the entrypoint.
     uses: asraa/slsa-on-github/.github/workflows/goreleaser_slsa3.yml@main
 
