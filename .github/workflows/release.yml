@@ -1,0 +1,42 @@
+name: slsa 3 goreleaser project
+
+on:
+  # For manual tests.
+  workflow_dispatch:
+    inputs:
+      release-tag:
+        description: "Release tag to test"
+        required: false
+        default: v1
+        type: string
+  push:
+    tags:
+      - "*" # triggers only if push new tag version, like `0.8.4` or else
+
+permissions: read-all
+
+jobs:
+  # release.
+  release:
+    permissions:
+      id-token: write # For signing.
+      contents: write # For asset uploads.
+      packages: write
+      actions: read # For the entrypoint.
+    uses: asraa/slsa-on-github/.github/workflows/goreleaser_slsa3.yml@main
+
+  # test output
+  debug:
+    needs: [release]
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          GORELEASER_ARTIFACTS: ${{ needs.release.outputs.artifacts }}
+          GORELEASER_METADATA: ${{ needs.release.outputs.metadata }}
+          ATTESTATION_NAME: ${{ needs.release.outputs.attestations-download-name }}
+        run: |
+          #TODO: test with json
+          # TODO: verify
+          echo "GORELEASER_ARTIFACTS: $GORELEASER_ARTIFACTS"
+          echo "GORELEASER_METADATA: $GORELEASER_METADATA"
+          echo "ATTESTATION_NAME: $ATTESTATION_NAME"
