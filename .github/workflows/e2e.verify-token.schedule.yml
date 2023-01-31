@@ -40,9 +40,8 @@ jobs:
           output-predicate: predicate.json
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
         with:
-          path: __CURRENT__
           clean: false
-      - run: ./__CURRENT__/.github/workflows/scripts/verify-token.sh
+      - run: .github/workflows/scripts/verify-token.sh
         env:
           VERIFIED_TOKEN: ${{ steps.verify.outputs.slsa-verified-token }}
           TOOL_REPOSITORY: ${{ steps.verify.outputs.tool-repository }}
