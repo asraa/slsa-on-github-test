@@ -21,10 +21,11 @@ jobs:
     steps:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
         with:
+          path: __GENERATOR__
           repository: slsa-framework/slsa-github-generator
           clean: false
       - id: setup
-        uses: ./actions/delegator/setup-token
+        uses: __GENERATOR__/actions/delegator/setup-token
         with:
           slsa-workflow-recipient: "delegator_generic_slsa3.yml"
           slsa-rekor-log-public: true
@@ -32,18 +33,19 @@ jobs:
           slsa-build-action-path: "./actions/build-artifacts-composite"
           slsa-workflow-inputs: '{"name1":"value1","name2":"value2","private-repository":true}'
       - id: verify
-        uses: ./.github/actions/verify-token
+        uses: __GENERATOR__/.github/actions/verify-token
         with:
           slsa-unverified-token: ${{ steps.setup.outputs.slsa-token }}
           slsa-workflow-recipient: "delegator_generic_slsa3.yml"
           output-predicate: predicate.json
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
         with:
+          path: __CURRENT__
           clean: false
-      - run: ./.github/workflows/scripts/verify-token.sh
+      - run: __CURRENT__/.github/workflows/scripts/verify-token.sh
         env:
           VERIFIED_TOKEN: ${{ steps.verify.outputs.slsa-verified-token }}
           TOOL_REPOSITORY: ${{ steps.verify.outputs.tool-repository }}
           TOOL_REF: ${{ steps.verify.outputs.tool-ref }}
-          PREDICATE: predicate.json
+          PREDICATE: __GENERATOR__/predicate.json
 
