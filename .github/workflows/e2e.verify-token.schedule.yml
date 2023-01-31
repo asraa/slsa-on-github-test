@@ -1,0 +1,48 @@
+name: schedule verify-token
+
+on:
+  # Daily run.
+  schedule:
+    - cron: "0 4 * * *"
+  workflow_dispatch:
+
+permissions: read-all
+
+env:
+  GH_TOKEN: ${{ github.token }}
+  ISSUE_REPOSITORY: ${{ github.repository }}
+
+jobs:
+  verify-token:
+    permissions:
+      contents: read
+      id-token: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+        with:
+          repository: slsa-framework/slsa-github-generator
+      - id: setup
+        uses: ./actions/delegator/setup-token
+        with:
+          slsa-workflow-recipient: "delegator_generic_slsa3.yml"
+          slsa-private-repository: true
+          slsa-runner-label: "ubuntu-latest"
+          slsa-build-action-path: "./actions/build-artifacts-composite"
+          slsa-workflow-inputs: '{"name1":"value1","name2":"value2","private-repository":true}'
+      - id: verify
+        uses: ./.github/actions/verify-token
+        with:
+          slsa-unverified-token: ${{ steps.setup.outputs.slsa-token }}
+          slsa-workflow-recipient: "delegator_generic_slsa3.yml"
+          output-predicate: predicate.json
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+        with:
+          clean: false
+      - run: ./.github/workflows/scripts/verify-token.sh
+        env:
+          VERIFIED_TOKEN: ${{ steps.verify.outputs.slsa-verified-token }}
+          TOOL_REPOSITORY: ${{ steps.verify.outputs.tool-repository }}
+          TOOL_REF: ${{ steps.verify.outputs.tool-ref }}
+          PREDICATE: predicate.json
+
