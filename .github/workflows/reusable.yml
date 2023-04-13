@@ -1,0 +1,14 @@
+name: Reuse
+on:
+  workflow_call:
+jobs:
+  reuse:
+    runs-on: ubuntu-latest
+    env:
+      JOB_WORKFLOW_SHA: ${{ github.job_workflow_sha }}
+    steps:
+    - shell: bash
+      run: |
+        echo 'github: ${{toJSON(github)}}'
+        echo ${JOB_WORKFLOW_SHA}
+
